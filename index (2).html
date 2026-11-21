@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#32105c"><title>Kamagochin Translator</title>
+<style>
+:root{--p:#32105c;--p2:#581783;--g:#e4b64e;--cream:#fff7e9;--ink:#25113e}
+*{box-sizing:border-box}body{margin:0;padding:16px;background:linear-gradient(135deg,#210735,#4a1269,#210735);font-family:Georgia,serif;color:var(--ink)}
+header{text-align:center;color:#ffe17a;padding:12px;border-bottom:3px solid var(--g);max-width:1200px;margin:auto}header .crown{font-size:2.4rem}h1{margin:4px;font-size:clamp(1.7rem,4vw,3rem)}header p{color:white;font-style:italic;font-size:1.25rem;margin:6px}
+main{max-width:1200px;margin:16px auto;background:var(--cream);border:4px solid var(--g);border-radius:18px;padding:clamp(12px,2vw,24px);box-shadow:0 10px 35px #0005}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}.step{border:1px solid #d6a15c;border-radius:12px;padding:12px;text-align:center;background:#fffaf2}.step b{display:block;margin-bottom:6px}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid #a17ac3;border-radius:13px;overflow:hidden}.panel h2{margin:0;padding:13px 15px;background:linear-gradient(90deg,var(--p),var(--p2));color:white;font-size:1.35rem}.inside{padding:14px}
+textarea,.output{width:100%;min-height:175px;border:1px solid #a99bb6;border-radius:11px;padding:14px;font:1.05rem/1.5 Arial,sans-serif;background:white;color:var(--ink);resize:vertical;overflow-wrap:anywhere;white-space:pre-wrap}.output{background:#f2e7ff}.placeholder{color:#746581}
+button{border-radius:9px;padding:12px;font:600 1rem Arial,sans-serif;cursor:pointer}.primary{width:100%;margin-top:11px;background:linear-gradient(90deg,#5b1685,var(--p));color:white;border:0}.actions{display:flex;gap:10px;margin-top:10px}.actions button{flex:1;background:white;color:var(--p);border:1px solid var(--p)}.status{font: .9rem Arial,sans-serif;color:#5b3672;min-height:1.2em;line-height:1.4}.details{margin-top:10px;font: .95rem Arial,sans-serif}
+.info-grid{display:grid;grid-template-columns:1fr 1.4fr 1.2fr;gap:12px;margin-top:18px}.info{border:1px solid #d6a15c;border-radius:12px;padding:14px;background:#fffaf2}.info h3{color:var(--p);margin:0 0 8px;font-size:1.2rem}.info li{line-height:1.4;margin:5px 0}.alphabet{display:grid;grid-template-columns:1fr 1fr;gap:6px}.chip{background:#f0e4ff;padding:7px;text-align:center;border-radius:6px;font-family:Arial,sans-serif}.note{font: .88rem/1.45 Arial,sans-serif;color:#62536c}
+@media(max-width:780px){.steps{grid-template-columns:repeat(2,1fr)}.panels,.info-grid{grid-template-columns:1fr}}@media(max-width:420px){body{padding:7px}.step{padding:8px}}
+</style></head><body>
+<header><div class="crown">♛</div><h1>Kamagochin Translator</h1><p>English → Hindi → Latin → Creasian</p></header>
+<main>
+<section class="steps"><div class="step"><b>1 · English</b>Type your text.</div><div class="step"><b>2 · Hindi</b>Translate into Hindi.</div><div class="step"><b>3 · Latin</b>Write Hindi pronunciation in Latin letters.</div><div class="step"><b>4 · Creasian</b>Apply your Kamagochin code.</div></section>
+<section class="panels">
+<div class="panel"><h2>⌨ Enter English Text</h2><div class="inside"><textarea id="source" placeholder="e.g. hello, thank you, or a sentence…"></textarea><button id="translate" class="primary">✦ Translate to Kamagochin</button><p id="status" class="status">An internet connection is needed to translate text.</p></div></div>
+<div class="panel"><h2>文 Kamagochin Translation</h2><div class="inside"><div id="result" class="output placeholder">Your Kamagochin translation will appear here…</div><div class="actions"><button id="copy">▢ Copy translation</button><button id="clear">↻ Clear</button></div></div></div>
+</section>
+<section class="info-grid">
+<div class="info"><h3>Special Kamagochin letters</h3><div class="alphabet"><div class="chip">HJA = F</div><div class="chip">TSA = M</div><div class="chip">QAI = P</div><div class="chip">XHA = Y</div></div><p class="note">Uses the same Kamagochin code as your first translator.</p></div>
+<div class="info"><h3>Key rules</h3><ul><li>English text is prepared for conversion.</li><li>The text is converted into the Kamagochin writing form.</li><li>Words starting with a vowel get no extra A.</li><li>For a consonant-starting word, add A after the first mapped character.</li><li>If the coded word begins HJA, TSA, QAI or XHA, add A after that complete sequence.</li></ul></div>
+<div class="info"><h3>How it works</h3><ol><li>Process the English text.</li><li>Convert the text into a Latin-letter form.</li><li>Apply the Kamagochin substitutions and word-start rule.</li></ol><p class="note">Text is processed by an external translation service. Avoid entering private or sensitive information.</p></div>
+</section>
+</main>
+<script>
+const M={a:"e",b:"d",c:"g",d:"b",e:"a",f:"hja",g:"h",h:"m",i:"u",j:"f",k:"l",l:"k",m:"tsa",n:"n",o:"o",p:"qai",q:"p",r:"s",s:"r",t:"v",u:"i",v:"t",w:"j",x:"ye",y:"xha",z:"z"};
+const vowels="aeiou";
+function romanize(s){
+ const C={क:"k",ख:"kh",ग:"g",घ:"gh",ङ:"ṅ",च:"ch",छ:"chh",ज:"j",झ:"jh",ञ:"ñ",ट:"ṭ",ठ:"ṭh",ड:"ḍ",ढ:"ḍh",ण:"ṇ",त:"t",थ:"th",द:"d",ध:"dh",न:"n",प:"p",फ:"ph",ब:"b",भ:"bh",म:"m",य:"y",र:"r",ल:"l",व:"v",श:"sh",ष:"ṣ",स:"s",ह:"h",क़:"q",ज़:"z",ड़:"ṛ",ढ़:"ṛh",फ़:"f"};
+ const V={अ:"a",आ:"ā",इ:"i",ई:"ī",उ:"u",ऊ:"ū",ऋ:"ṛ",ए:"e",ऐ:"ai",ओ:"o",औ:"au"};
+ const S={"ा":"ā","ि":"i","ी":"ī","ु":"u","ू":"ū","ृ":"ṛ","े":"e","ै":"ai","ो":"o","ौ":"au","ॅ":"e","ॉ":"o"};
+ let out="";
+ for(let i=0;i<s.length;i++){let ch=s[i];if(ch==="़"||ch==="्")continue;
+ if(C[ch]){out+=C[ch];if(s[i+1]==="़"){i++}
+ if(s[i+1]==="्"){i++;continue}
+ if(S[s[i+1]])out+=S[s[++i]];
+ else if(s[i+1]==="ं"||s[i+1]==="ँ"){out+="aṃ";i++}
+ else if(s[i+1]==="ः"){out+="aḥ";i++}
+ else if(i===s.length-1||(!C[s[i+1]]&&!V[s[i+1]]&&!S[s[i+1]]))out+="a";
+ else if(C[s[i+1]])out+="a";
+ }else if(V[ch])out+=V[ch];else if(S[ch])out+=S[ch];else if(ch==="।"||ch==="॥")out+=".";else out+=ch}
+ return out;
+}
+function code(s){return s.split(/(\s+)/).map(w=>{if(!w||/^\s+$/.test(w))return w;return w.split(/([.,!?;:()[\]{}"'’“”\-]+)/).map(part=>{if(!part||/^[.,!?;:()[\]{}"'’“”\-]+$/.test(part))return part;let c=[...part.toLowerCase()].map(x=>M[x]??x).join("");if(!/^[a-z]/i.test(part)||vowels.includes(part[0].toLowerCase()))return c;let sp=["hja","tsa","qai","xha"].find(x=>c.startsWith(x));return sp?c.slice(0,sp.length)+"a"+c.slice(sp.length):c[0]+"a"+c.slice(1)}).join("")}).join("")}
+async function translate(){let q=document.getElementById("source").value.trim(),st=document.getElementById("status"),btn=document.getElementById("translate");if(!q){st.textContent="Enter some English text first.";return}btn.disabled=true;st.textContent="Translating into Hindi…";let r=document.getElementById("result");r.textContent="Working…";r.classList.remove("placeholder");
+try{let res=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(q)+"&langpair=en|hi");if(!res.ok)throw Error("Translation service error.");let d=await res.json(),hi=d?.responseData?.translatedText;if(!hi||d.responseStatus!==200)throw Error(d.responseDetails||"No translation returned.");let la=romanize(hi);r.textContent=code(la);st.textContent="Translation complete."}catch(e){r.textContent="Translation could not be completed. Check your connection and try again.";st.textContent="The online Hindi translation service may be unavailable. "+e.message}finally{btn.disabled=false}}
+document.getElementById("translate").addEventListener("click",translate);
+document.getElementById("copy").addEventListener("click",async()=>{let t=document.getElementById("result").textContent;if(t.startsWith("Your Creasian")||t==="Working…"){document.getElementById("status").textContent="Translate some text first.";return}try{await navigator.clipboard.writeText(t);document.getElementById("status").textContent="Copied."}catch{document.getElementById("status").textContent="Please select and copy the result manually."}});
+document.getElementById("clear").addEventListener("click",()=>{document.getElementById("source").value="";document.getElementById("result").textContent="Your Kamagochin translation will appear here…";document.getElementById("result").classList.add("placeholder");document.getElementById("status").textContent="Cleared."});
+document.getElementById("source").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")translate()});
+</script></body></html>
